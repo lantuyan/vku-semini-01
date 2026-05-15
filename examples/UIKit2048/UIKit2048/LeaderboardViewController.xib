@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LeaderboardViewController" customModule="UIKit2048" customModuleProvider="target">
+            <connections>
+                <outlet property="view" destination="leaderboard-root-view" id="owner-view-connection"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="leaderboard-root-view">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="18" translatesAutoresizingMaskIntoConstraints="NO" id="main-stack">
+                    <rect key="frame" x="24" y="103" width="345" height="522"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bảng xếp hạng" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="1" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="title-label">
+                            <rect key="frame" x="0.0" y="0.0" width="345" height="41"/>
+                            <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="34"/>
+                            <color key="textColor" red="0.4705882353" green="0.4274509804" blue="0.3882352941" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dữ liệu mockup để demo UITableView/XIB ở buổi học." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="subtitle-label">
+                            <rect key="frame" x="0.0" y="59" width="345" height="40"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                            <color key="textColor" red="0.4705882353" green="0.4274509804" blue="0.3882352941" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="score-card">
+                            <rect key="frame" x="0.0" y="117" width="345" height="405"/>
+                            <subviews>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="rows-stack">
+                                    <rect key="frame" x="16" y="16" width="313" height="373"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="row-header">
+                                            <rect key="frame" x="0.0" y="0.0" width="313" height="52"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="HẠNG" textAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="header-rank">
+                                                    <rect key="frame" x="0.0" y="0.0" width="58" height="52"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="bold" pointSize="12"/>
+                                                    <color key="textColor" red="0.5607843137" green="0.4784313725" blue="0.4" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="NGƯỜI CHƠI" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="header-name">
+                                                    <rect key="frame" x="70" y="0.0" width="153" height="52"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="bold" pointSize="12"/>
+                                                    <color key="textColor" red="0.5607843137" green="0.4784313725" blue="0.4" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="ĐIỂM" textAlignment="right" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="header-score">
+                                                    <rect key="frame" x="235" y="0.0" width="78" height="52"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="bold" pointSize="12"/>
+                                                    <color key="textColor" red="0.5607843137" green="0.4784313725" blue="0.4" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="52" id="row-header-height"/>
+                                                <constraint firstItem="header-rank" firstAttribute="leading" secondItem="row-header" secondAttribute="leading" id="header-rank-leading"/>
+                                                <constraint firstItem="header-rank" firstAttribute="top" secondItem="row-header" secondAttribute="top" id="header-rank-top"/>
+                                                <constraint firstItem="header-rank" firstAttribute="bottom" secondItem="row-header" secondAttribute="bottom" id="header-rank-bottom"/>
+                                                <constraint firstItem="header-rank" firstAttribute="width" constant="58" id="header-rank-width"/>
+                                                <constraint firstItem="header-name" firstAttribute="leading" secondItem="header-rank" secondAttribute="trailing" constant="12" id="header-name-leading"/>
+                                                <constraint firstItem="header-name" firstAttribute="top" secondItem="row-header" secondAttribute="top" id="header-name-top"/>
+                                                <constraint firstItem="header-name" firstAttribute="bottom" secondItem="row-header" secondAttribute="bottom" id="header-name-bottom"/>
+                                                <constraint firstItem="header-score" firstAttribute="leading" secondItem="header-name" secondAttribute="trailing" constant="12" id="header-score-leading"/>
+                                                <constraint firstItem="header-score" firstAttribute="trailing" secondItem="row-header" secondAttribute="trailing" id="header-score-trailing"/>
+                                                <constraint firstItem="header-score" firstAttribute="top" secondItem="row-header" secondAttribute="top" id="header-score-top"/>
+                                                <constraint firstItem="header-score" firstAttribute="bottom" secondItem="row-header" secondAttribute="bottom" id="header-score-bottom"/>
+                                                <constraint firstItem="header-score" firstAttribute="width" constant="78" id="header-score-width"/>
+                                            </constraints>
+                                        </view>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="row-1">
+                                            <rect key="frame" x="0.0" y="52" width="313" height="64"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="#1" textAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rank-1">
+                                                    <rect key="frame" x="0.0" y="0.0" width="58" height="64"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
+                                                    <color key="textColor" red="0.4705882353" green="0.4274509804" blue="0.3882352941" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Lan Nguyen" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="name-1">
+                                                    <rect key="frame" x="70" y="0.0" width="153" height="64"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="bold" pointSize="18"/>
+                                                    <color key="textColor" red="0.4705882353" green="0.4274509804" blue="0.3882352941" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="84,320" textAlignment="right" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="score-1">
+                                                    <rect key="frame" x="235" y="0.0" width="78" height="64"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="18"/>
+                                                    <color key="textColor" red="0.9294117647" green="0.3490196078" blue="0.231372549" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" red="0.9294117647" green="0.8901960784" blue="0.8196078431" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="64" id="row-1-height"/>
+                                                <constraint firstItem="rank-1" firstAttribute="leading" secondItem="row-1" secondAttribute="leading" id="rank-1-leading"/>
+                                                <constraint firstItem="rank-1" firstAttribute="top" secondItem="row-1" secondAttribute="top" id="rank-1-top"/>
+                                                <constraint firstItem="rank-1" firstAttribute="bottom" secondItem="row-1" secondAttribute="bottom" id="rank-1-bottom"/>
+                                                <constraint firstItem="rank-1" firstAttribute="width" constant="58" id="rank-1-width"/>
+                                                <constraint firstItem="name-1" firstAttribute="leading" secondItem="rank-1" secondAttribute="trailing" constant="12" id="name-1-leading"/>
+                                                <constraint firstItem="name-1" firstAttribute="top" secondItem="row-1" secondAttribute="top" id="name-1-top"/>
+                                                <constraint firstItem="name-1" firstAttribute="bottom" secondItem="row-1" secondAttribute="bottom" id="name-1-bottom"/>
+                                                <constraint firstItem="score-1" firstAttribute="leading" secondItem="name-1" secondAttribute="trailing" constant="12" id="score-1-leading"/>
+                                                <constraint firstItem="score-1" firstAttribute="trailing" secondItem="row-1" secondAttribute="trailing" id="score-1-trailing"/>
+                                                <constraint firstItem="score-1" firstAttribute="top" secondItem="row-1" secondAttribute="top" id="score-1-top"/>
+                                                <constraint firstItem="score-1" firstAttribute="bottom" secondItem="row-1" secondAttribute="bottom" id="score-1-bottom"/>
+                                                <constraint firstItem="score-1" firstAttribute="width" constant="78" id="score-1-width"/>
+                                            </constraints>
+                                        </view>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="row-2">
+                                            <rect key="frame" x="0.0" y="116" width="313" height="64"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="#2" textAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rank-2">
+                                                    <rect key="frame" x="0.0" y="0.0" width="58" height="64"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
+                                                    <color key="textColor" red="0.4705882353" green="0.4274509804" blue="0.3882352941" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Minh Tran" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="name-2">
+                                                    <rect key="frame" x="70" y="0.0" width="153" height="64"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="bold" pointSize="18"/>
+                                                    <color key="textColor" red="0.4705882353" green="0.4274509804" blue="0.3882352941" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="62,180" textAlignment="right" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="score-2">
+                                                    <rect key="frame" x="235" y="0.0" width="78" height="64"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="18"/>
+                                                    <color key="textColor" red="0.9607843137" green="0.5803921569" blue="0.3921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" red="0.9607843137" green="0.937254902" blue="0.8784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="64" id="row-2-height"/>
+                                                <constraint firstItem="rank-2" firstAttribute="leading" secondItem="row-2" secondAttribute="leading" id="rank-2-leading"/>
+                                                <constraint firstItem="rank-2" firstAttribute="top" secondItem="row-2" secondAttribute="top" id="rank-2-top"/>
+                                                <constraint firstItem="rank-2" firstAttribute="bottom" secondItem="row-2" secondAttribute="bottom" id="rank-2-bottom"/>
+                                                <constraint firstItem="rank-2" firstAttribute="width" constant="58" id="rank-2-width"/>
+                                                <constraint firstItem="name-2" firstAttribute="leading" secondItem="rank-2" secondAttribute="trailing" constant="12" id="name-2-leading"/>
+                                                <constraint firstItem="name-2" firstAttribute="top" secondItem="row-2" secondAttribute="top" id="name-2-top"/>
+                                                <constraint firstItem="name-2" firstAttribute="bottom" secondItem="row-2" secondAttribute="bottom" id="name-2-bottom"/>
+                                                <constraint firstItem="score-2" firstAttribute="leading" secondItem="name-2" secondAttribute="trailing" constant="12" id="score-2-leading"/>
+                                                <constraint firstItem="score-2" firstAttribute="trailing" secondItem="row-2" secondAttribute="trailing" id="score-2-trailing"/>
+                                                <constraint firstItem="score-2" firstAttribute="top" secondItem="row-2" secondAttribute="top" id="score-2-top"/>
+                                                <constraint firstItem="score-2" firstAttribute="bottom" secondItem="row-2" secondAttribute="bottom" id="score-2-bottom"/>
+                                                <constraint firstItem="score-2" firstAttribute="width" constant="78" id="score-2-width"/>
+                                            </constraints>
+                                        </view>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="row-3">
+                                            <rect key="frame" x="0.0" y="180" width="313" height="64"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="#3" textAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rank-3">
+                                                    <rect key="frame" x="0.0" y="0.0" width="58" height="64"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
+                                                    <color key="textColor" red="0.4705882353" green="0.4274509804" blue="0.3882352941" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Hoa Le" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="name-3">
+                                                    <rect key="frame" x="70" y="0.0" width="153" height="64"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="bold" pointSize="18"/>
+                                                    <color key="textColor" red="0.4705882353" green="0.4274509804" blue="0.3882352941" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="48,512" textAlignment="right" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="score-3">
+                                                    <rect key="frame" x="235" y="0.0" width="78" height="64"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="18"/>
+                                                    <color key="textColor" red="0.9490196078" green="0.6901960784" blue="0.4705882353" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" red="0.9294117647" green="0.8901960784" blue="0.8196078431" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="64" id="row-3-height"/>
+                                                <constraint firstItem="rank-3" firstAttribute="leading" secondItem="row-3" secondAttribute="leading" id="rank-3-leading"/>
+                                                <constraint firstItem="rank-3" firstAttribute="top" secondItem="row-3" secondAttribute="top" id="rank-3-top"/>
+                                                <constraint firstItem="rank-3" firstAttribute="bottom" secondItem="row-3" secondAttribute="bottom" id="rank-3-bottom"/>
+                                                <constraint firstItem="rank-3" firstAttribute="width" constant="58" id="rank-3-width"/>
+                                                <constraint firstItem="name-3" firstAttribute="leading" secondItem="rank-3" secondAttribute="trailing" constant="12" id="name-3-leading"/>
+                                                <constraint firstItem="name-3" firstAttribute="top" secondItem="row-3" secondAttribute="top" id="name-3-top"/>
+                                                <constraint firstItem="name-3" firstAttribute="bottom" secondItem="row-3" secondAttribute="bottom" id="name-3-bottom"/>
+                                                <constraint firstItem="score-3" firstAttribute="leading" secondItem="name-3" secondAttribute="trailing" constant="12" id="score-3-leading"/>
+                                                <constraint firstItem="score-3" firstAttribute="trailing" secondItem="row-3" secondAttribute="trailing" id="score-3-trailing"/>
+                                                <constraint firstItem="score-3" firstAttribute="top" secondItem="row-3" secondAttribute="top" id="score-3-top"/>
+                                                <constraint firstItem="score-3" firstAttribute="bottom" secondItem="row-3" secondAttribute="bottom" id="score-3-bottom"/>
+                                                <constraint firstItem="score-3" firstAttribute="width" constant="78" id="score-3-width"/>
+                                            </constraints>
+                                        </view>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="row-4">
+                                            <rect key="frame" x="0.0" y="244" width="313" height="64"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="#4" textAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rank-4">
+                                                    <rect key="frame" x="0.0" y="0.0" width="58" height="64"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
+                                                    <color key="textColor" red="0.4705882353" green="0.4274509804" blue="0.3882352941" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Khang Pham" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="name-4">
+                                                    <rect key="frame" x="70" y="0.0" width="153" height="64"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="bold" pointSize="18"/>
+                                                    <color key="textColor" red="0.4705882353" green="0.4274509804" blue="0.3882352941" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="31,040" textAlignment="right" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="score-4">
+                                                    <rect key="frame" x="235" y="0.0" width="78" height="64"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="18"/>
+                                                    <color key="textColor" red="0.5607843137" green="0.4784313725" blue="0.4" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" red="0.9607843137" green="0.937254902" blue="0.8784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="64" id="row-4-height"/>
+                                                <constraint firstItem="rank-4" firstAttribute="leading" secondItem="row-4" secondAttribute="leading" id="rank-4-leading"/>
+                                                <constraint firstItem="rank-4" firstAttribute="top" secondItem="row-4" secondAttribute="top" id="rank-4-top"/>
+                                                <constraint firstItem="rank-4" firstAttribute="bottom" secondItem="row-4" secondAttribute="bottom" id="rank-4-bottom"/>
+                                                <constraint firstItem="rank-4" firstAttribute="width" constant="58" id="rank-4-width"/>
+                                                <constraint firstItem="name-4" firstAttribute="leading" secondItem="rank-4" secondAttribute="trailing" constant="12" id="name-4-leading"/>
+                                                <constraint firstItem="name-4" firstAttribute="top" secondItem="row-4" secondAttribute="top" id="name-4-top"/>
+                                                <constraint firstItem="name-4" firstAttribute="bottom" secondItem="row-4" secondAttribute="bottom" id="name-4-bottom"/>
+                                                <constraint firstItem="score-4" firstAttribute="leading" secondItem="name-4" secondAttribute="trailing" constant="12" id="score-4-leading"/>
+                                                <constraint firstItem="score-4" firstAttribute="trailing" secondItem="row-4" secondAttribute="trailing" id="score-4-trailing"/>
+                                                <constraint firstItem="score-4" firstAttribute="top" secondItem="row-4" secondAttribute="top" id="score-4-top"/>
+                                                <constraint firstItem="score-4" firstAttribute="bottom" secondItem="row-4" secondAttribute="bottom" id="score-4-bottom"/>
+                                                <constraint firstItem="score-4" firstAttribute="width" constant="78" id="score-4-width"/>
+                                            </constraints>
+                                        </view>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mockup: chưa lưu dữ liệu thật. Có thể thay bằng UserDefaults hoặc API sau." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="note-label">
+                                            <rect key="frame" x="0.0" y="308" width="313" height="65"/>
+                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="14"/>
+                                            <color key="textColor" red="0.4705882353" green="0.4274509804" blue="0.3882352941" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </stackView>
+                            </subviews>
+                            <color key="backgroundColor" red="0.7333333333" green="0.6823529412" blue="0.631372549" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstItem="rows-stack" firstAttribute="leading" secondItem="score-card" secondAttribute="leading" constant="16" id="rows-leading"/>
+                                <constraint firstAttribute="trailing" secondItem="rows-stack" secondAttribute="trailing" constant="16" id="rows-trailing"/>
+                                <constraint firstItem="rows-stack" firstAttribute="top" secondItem="score-card" secondAttribute="top" constant="16" id="rows-top"/>
+                                <constraint firstAttribute="bottom" secondItem="rows-stack" secondAttribute="bottom" constant="16" id="rows-bottom"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="14"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="safe-area"/>
+            <color key="backgroundColor" red="0.9803921569" green="0.9607843137" blue="0.9019607843" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="main-stack" firstAttribute="leading" secondItem="safe-area" secondAttribute="leading" constant="24" id="main-leading"/>
+                <constraint firstItem="safe-area" firstAttribute="trailing" secondItem="main-stack" secondAttribute="trailing" constant="24" id="main-trailing"/>
+                <constraint firstItem="main-stack" firstAttribute="top" secondItem="safe-area" secondAttribute="top" constant="44" id="main-top"/>
+            </constraints>
+            <point key="canvasLocation" x="140" y="20"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

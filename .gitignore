@@ -11,6 +11,16 @@ __pycache__/
 preview/
 *.pptx.png
 
-# Demo app projects kept locally only
-examples/SwiftUIMemoryMatch/
-examples/UIKit2048/
+# Xcode / Swift build outputs and local user state
+DerivedData/
+build/
+.build/
+.swiftpm/
+xcuserdata/
+*.xcuserstate
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM/
+*.dSYM.zip
+*.app/

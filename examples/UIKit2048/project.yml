@@ -1,0 +1,42 @@
+name: UIKit2048
+options:
+  bundleIdPrefix: com.vkuseminar
+  deploymentTarget:
+    iOS: "15.0"
+settings:
+  base:
+    SWIFT_VERSION: 5.0
+targets:
+  UIKit2048:
+    type: application
+    platform: iOS
+    sources:
+      - path: UIKit2048
+    info:
+      path: UIKit2048/Info.plist
+      properties:
+        CFBundleDisplayName: UIKit 2048
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations:
+            UIWindowSceneSessionRoleApplication:
+              - UISceneConfigurationName: Default Configuration
+                UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.vkuseminar.UIKit2048
+        TARGETED_DEVICE_FAMILY: 1
+schemes:
+  UIKit2048:
+    build:
+      targets:
+        UIKit2048: all
+    run:
+      config: Debug
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
