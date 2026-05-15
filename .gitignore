@@ -1,0 +1,16 @@
+.DS_Store
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Office temporary lock files
+~$*
+
+# Local generated previews
+preview/
+*.pptx.png
+
+# Demo app projects kept locally only
+examples/SwiftUIMemoryMatch/
+examples/UIKit2048/

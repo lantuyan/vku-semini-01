@@ -1,0 +1,25 @@
+Assets used in seminar-ios-vku-ca1.pptx
+
+1. devices-desk.jpg
+   Source: Wikimedia Commons, File:Laptop camera phone notebook (Unsplash).jpg
+   Author: Hector Martinez / oria_hector
+   License: CC0 1.0 public domain dedication
+   Usage: Cover and Apple ecosystem illustration.
+
+2. swift-logo.png
+   Source: Wikimedia Commons, File:Swift logo.svg
+   Author: Apple Inc.
+   License: Apache License 2.0
+   Usage: Swift language history slide.
+
+3. xcode-screenshot.png
+   Source: Wikimedia Commons, File:Xcode 11.6 Mac.png
+   Author: HtetPyae
+   License: CC BY-SA 4.0
+   Usage: Xcode/toolchain slide.
+
+4. dragon-bridge.jpg
+   Source: Wikimedia Commons, File:Dragon Bridge (29780234267).jpg
+   Author: Tran Anh Khoa / zorrotran
+   License: CC BY-SA 2.0
+   Usage: Da Nang outsource market slide.

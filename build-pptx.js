@@ -3,6 +3,7 @@
 // Tone: green (forest), large readable text for a 200-person hall.
 
 const pptxgen = require("pptxgenjs");
+const path = require("path");
 
 // ===== Color palette (Forest & Moss inspired) =====
 const C = {
@@ -17,6 +18,11 @@ const C = {
 };
 
 const FONT = "Helvetica";
+const ASSET_DIR = path.join(__dirname, "assets");
+
+function asset(name) {
+  return path.join(ASSET_DIR, name);
+}
 
 // ===================================================
 // Helpers
@@ -36,31 +42,96 @@ function addBaseBg(slide, dark = false) {
 }
 
 function addFooter(slide, deckLabel, dark = false) {
-  slide.addText(`Seminar iOS · VKU · ${deckLabel}`, {
-    x: 0.4, y: 7.1, w: 8, h: 0.3,
-    fontFace: FONT, fontSize: 11, color: dark ? C.accent : C.inkSoft,
-  });
   slide.addText("Nguyễn Quế Lân · VNGalaxy", {
     x: 8.5, y: 7.1, w: 4.5, h: 0.3,
     fontFace: FONT, fontSize: 11, color: dark ? C.accent : C.inkSoft, align: "right",
   });
 }
 
+function addSource(slide, text, x = 0.65, y = 6.78, w = 8.2, dark = false) {
+  slide.addText(text, {
+    x, y, w, h: 0.25,
+    fontFace: FONT, fontSize: 8.5,
+    color: dark ? "DDE8D8" : C.inkSoft,
+  });
+}
+
+function addPhotoPanel(slide, imagePath, x, y, w, h, caption) {
+  slide.addImage({ path: imagePath, x, y, w, h, sizing: { type: "cover", w, h } });
+  slide.addShape("rect", {
+    x, y: y + h - 0.45, w, h: 0.45,
+    fill: { color: C.bgDark, transparency: 12 },
+    line: { color: C.bgDark, transparency: 100, width: 0 },
+  });
+  slide.addText(caption, {
+    x: x + 0.18, y: y + h - 0.34, w: w - 0.36, h: 0.2,
+    fontFace: FONT, fontSize: 8.5, color: C.white,
+  });
+}
+
+function addSlideTitle(slide, title, subtitle = "") {
+  slide.addText(title, {
+    x: 0.5, y: 0.35, w: 12.5, h: 0.65,
+    fontFace: FONT, fontSize: 30, bold: true, color: C.primaryDk,
+  });
+  slide.addShape("rect", {
+    x: 0.5, y: 1.08, w: 1.5, h: 0.06,
+    fill: { color: C.primary }, line: { color: C.primary, width: 0 },
+  });
+  if (subtitle) {
+    slide.addText(subtitle, {
+      x: 0.5, y: 1.2, w: 11.9, h: 0.32,
+      fontFace: FONT, fontSize: 13.5, color: C.inkSoft,
+    });
+  }
+}
+
+function addPill(slide, text, x, y, w, color = C.primary, fill = C.white) {
+  slide.addShape("roundRect", {
+    x, y, w, h: 0.44,
+    rectRadius: 0.08,
+    fill: { color: fill },
+    line: { color, width: 1.1 },
+  });
+  slide.addText(text, {
+    x: x + 0.08, y: y + 0.11, w: w - 0.16, h: 0.16,
+    fontFace: FONT, fontSize: 9.5, bold: true, color, align: "center",
+  });
+}
+
+function addMetricBar(slide, label, value, max, x, y, w, color, note = "") {
+  slide.addText(label, { x, y, w: 2.1, h: 0.25, fontFace: FONT, fontSize: 12, bold: true, color: C.ink });
+  slide.addShape("rect", { x: x + 2.25, y: y + 0.04, w, h: 0.2, fill: { color: "DDE8D8" }, line: { color: "DDE8D8", width: 0 } });
+  slide.addShape("rect", { x: x + 2.25, y: y + 0.04, w: w * value / max, h: 0.2, fill: { color }, line: { color, width: 0 } });
+  slide.addText(note || String(value), { x: x + 2.25 + w + 0.15, y: y - 0.01, w: 0.7, h: 0.2, fontFace: FONT, fontSize: 10, bold: true, color });
+}
+
 function titleSlide(pres, line1, line2, subtitle, deckLabel) {
   const s = pres.addSlide();
   addBaseBg(s, true);
+  addPhotoPanel(s, asset("devices-desk.jpg"), 8.35, 0.55, 4.15, 5.35, "Ảnh minh họa: Héctor Martínez / Wikimedia Commons CC0");
+  s.addShape("rect", {
+    x: 8.35, y: 0.55, w: 4.15, h: 5.35,
+    fill: { color: C.bgDark, transparency: 55 },
+    line: { color: C.accent, width: 0.8 },
+  });
   s.addText(line1, {
-    x: 0.8, y: 1.2, w: 12, h: 1.1,
+    x: 0.8, y: 1.15, w: 7.35, h: 1.05,
     fontFace: FONT, fontSize: 56, bold: true, color: C.white,
   });
   s.addText(line2, {
-    x: 0.8, y: 2.3, w: 12, h: 1.1,
+    x: 0.8, y: 2.25, w: 7.35, h: 1.55,
     fontFace: FONT, fontSize: 56, bold: true, color: C.accent,
   });
   s.addText(subtitle, {
-    x: 0.8, y: 3.7, w: 12, h: 0.8,
-    fontFace: FONT, fontSize: 24, color: C.white,
+    x: 0.8, y: 4.08, w: 7.2, h: 0.66,
+    fontFace: FONT, fontSize: 21, color: C.white,
   });
+  [
+    ["Swift", 8.65, 5.2],
+    ["Xcode", 9.72, 5.2],
+    ["Outsource", 10.85, 5.2],
+  ].forEach(([label, x, y]) => addPill(s, label, x, y, 0.95, C.accent, C.bgDark));
   s.addText("Nguyễn Quế Lân — Technical Leader, VNGalaxy", {
     x: 0.8, y: 5.6, w: 12, h: 0.5,
     fontFace: FONT, fontSize: 20, color: C.white, bold: true,
@@ -154,6 +225,87 @@ function twoColSlide(pres, title, leftTitle, left, rightTitle, right, deckLabel)
   return s;
 }
 
+function mobileTalentComparisonSlide(pres, deckLabel, emphasis) {
+  const s = pres.addSlide();
+  addBaseBg(s, false);
+  s.addText("Mobile talent: iOS ít người học hơn mức nhu cầu tuyển", {
+    x: 0.5, y: 0.35, w: 12.5, h: 0.75,
+    fontFace: FONT, fontSize: 30, bold: true, color: C.primaryDk,
+  });
+  s.addShape("rect", { x: 0.5, y: 1.08, w: 1.5, h: 0.06, fill: { color: C.primary }, line: { color: C.primary, width: 0 } });
+
+  s.addText("Nếu Android cần 10 người...", {
+    x: 0.65, y: 1.35, w: 5.75, h: 0.35,
+    fontFace: FONT, fontSize: 21, bold: true, color: C.primaryDk,
+  });
+  s.addText("...nhưng sinh viên học iOS lại rất ít", {
+    x: 6.9, y: 1.35, w: 5.75, h: 0.35,
+    fontFace: FONT, fontSize: 21, bold: true, color: C.primaryDk,
+  });
+
+  s.addShape("rect", { x: 0.6, y: 1.85, w: 5.85, h: 3.05, fill: { color: C.white }, line: { color: C.accent, width: 1 } });
+  s.addText("Nhu cầu tuyển dụng", {
+    x: 0.95, y: 2.05, w: 5.15, h: 0.32,
+    fontFace: FONT, fontSize: 17, bold: true, color: C.ink,
+  });
+
+  const demandRatioRows = [
+    { label: "Android", count: 10, raw: "22,6%", color: C.primary },
+    { label: "iOS", count: 7, raw: "16,4%", color: C.accent },
+  ];
+  demandRatioRows.forEach((r, idx) => {
+    const y = 2.65 + idx * 0.78;
+    s.addText(r.label, { x: 0.95, y, w: 1.55, h: 0.3, fontFace: FONT, fontSize: 16, bold: true, color: C.ink });
+    s.addText(`${r.count}`, { x: 2.6, y: y - 0.08, w: 0.65, h: 0.42, fontFace: FONT, fontSize: 27, bold: true, color: r.color, align: "right" });
+    s.addShape("rect", { x: 3.45, y: y + 0.02, w: 2.1, h: 0.24, fill: { color: "DDE8D8" }, line: { color: "DDE8D8", width: 0 } });
+    s.addShape("rect", { x: 3.45, y: y + 0.02, w: 2.1 * (r.count / 10), h: 0.24, fill: { color: r.color }, line: { color: r.color, width: 0 } });
+    s.addText(r.raw, { x: 5.55, y: y - 0.02, w: 0.62, h: 0.25, fontFace: FONT, fontSize: 10, bold: true, color: C.inkSoft, align: "right" });
+  });
+  s.addText("Quy đổi từ mục tiêu tuyển dụng 2024: Android 22,6%, iOS 16,4%. Nếu Android = 10 thì iOS ≈ 7.", {
+    x: 0.95, y: 4.08, w: 5.05, h: 0.42,
+    fontFace: FONT, fontSize: 12.2, color: C.inkSoft,
+  });
+
+  s.addShape("rect", { x: 6.8, y: 1.85, w: 5.85, h: 3.05, fill: { color: C.white }, line: { color: C.accent, width: 1 } });
+  s.addText("Pipeline sinh viên", {
+    x: 7.15, y: 2.05, w: 5.1, h: 0.32,
+    fontFace: FONT, fontSize: 17, bold: true, color: C.ink,
+  });
+
+  const studentRatioRows = [
+    { label: "Android", count: 10, color: C.primary },
+    { label: "iOS", count: 1, color: C.accent },
+  ];
+  studentRatioRows.forEach((r, idx) => {
+    const y = 2.65 + idx * 0.78;
+    s.addText(r.label, { x: 7.15, y, w: 1.55, h: 0.3, fontFace: FONT, fontSize: 16, bold: true, color: C.ink });
+    s.addText(`${r.count}`, { x: 8.8, y: y - 0.08, w: 0.65, h: 0.42, fontFace: FONT, fontSize: 27, bold: true, color: r.color, align: "right" });
+    s.addShape("rect", { x: 9.65, y: y + 0.02, w: 2.1, h: 0.24, fill: { color: "DDE8D8" }, line: { color: "DDE8D8", width: 0 } });
+    s.addShape("rect", { x: 9.65, y: y + 0.02, w: 2.1 * (r.count / 10), h: 0.24, fill: { color: r.color }, line: { color: r.color, width: 0 } });
+  });
+  s.addText("Minh họa từ quan sát lớp học/khảo sát nhanh: nhiều bạn chọn Android trước; iOS bị rào cản MacBook, iPhone, App Store.", {
+    x: 7.15, y: 4.08, w: 5.05, h: 0.42,
+    fontFace: FONT, fontSize: 12.2, color: C.inkSoft,
+  });
+
+  s.addShape("rect", { x: 0.6, y: 5.2, w: 12.05, h: 1.2, fill: { color: C.bgDark }, line: { color: C.bgDark, width: 0 } });
+  s.addText("Thông điệp chính", {
+    x: 0.9, y: 5.36, w: 2.05, h: 0.28,
+    fontFace: FONT, fontSize: 13, bold: true, color: C.accent,
+  });
+  s.addText(emphasis, {
+    x: 0.9, y: 5.68, w: 11.45, h: 0.42,
+    fontFace: FONT, fontSize: 17.5, bold: true, color: C.white,
+  });
+  s.addText("Nguồn tuyển dụng: TopDev Vietnam IT & Tech Talent Landscape 2024-2025, tr.34. Tỷ lệ sinh viên là minh họa/proxy, nên xác nhận bằng khảo sát nhanh tại lớp.", {
+    x: 0.65, y: 6.65, w: 7.8, h: 0.28,
+    fontFace: FONT, fontSize: 10.5, color: C.inkSoft,
+  });
+
+  addFooter(s, deckLabel, false);
+  return s;
+}
+
 function timelineSlide(pres, title, rows, deckLabel) {
   const s = pres.addSlide();
   addBaseBg(s, false);
@@ -200,6 +352,347 @@ function bigQuoteSlide(pres, quote, attribution, deckLabel) {
   return s;
 }
 
+function platformEcosystemSlide(pres, deckLabel, flavor) {
+  const s = pres.addSlide();
+  addBaseBg(s, false);
+  addSlideTitle(s, "Hệ sinh thái Apple Platforms", "Một ngôn ngữ và một toolchain đi qua nhiều thiết bị.");
+
+  addPhotoPanel(s, asset("devices-desk.jpg"), 8.55, 1.35, 3.95, 4.65, "Ảnh minh họa: Héctor Martínez / Wikimedia Commons CC0");
+  s.addShape("rect", { x: 0.75, y: 1.85, w: 7.1, h: 0.12, fill: { color: "DDE8D8" }, line: { color: "DDE8D8", width: 0 } });
+  const platforms = [
+    ["iOS", "iPhone", 0.95, C.primary],
+    ["iPadOS", "iPad", 2.28, C.accent],
+    ["watchOS", "Watch", 3.78, C.primary],
+    ["macOS", "Mac", 5.22, C.accent],
+    ["visionOS", "Spatial", 6.48, C.primary],
+  ];
+  platforms.forEach(([name, device, x, color], idx) => {
+    s.addShape("ellipse", { x, y: 1.53, w: 0.7, h: 0.7, fill: { color }, line: { color, width: 0 } });
+    s.addText(String(idx + 1), { x, y: 1.72, w: 0.7, h: 0.2, fontFace: FONT, fontSize: 11, bold: true, color: C.white, align: "center" });
+    s.addText(name, { x: x - 0.24, y: 2.38, w: 1.18, h: 0.25, fontFace: FONT, fontSize: 13.5, bold: true, color: C.primaryDk, align: "center" });
+    s.addText(device, { x: x - 0.24, y: 2.72, w: 1.18, h: 0.22, fontFace: FONT, fontSize: 9.5, color: C.inkSoft, align: "center" });
+  });
+  s.addShape("rect", { x: 0.8, y: 3.45, w: 7.3, h: 1.3, fill: { color: C.white }, line: { color: C.accent, width: 1 } });
+  s.addText("Ý cần giải thích cho sinh viên", { x: 1.05, y: 3.65, w: 3.2, h: 0.25, fontFace: FONT, fontSize: 13, bold: true, color: C.primaryDk });
+  s.addText([
+    "Học iOS không chỉ là học một chiếc điện thoại.",
+    "Khi nắm Swift + Xcode + SDK, bạn có thể chuyển sang iPad, Mac, Watch hoặc visionOS dễ hơn nhiều so với học lại từ đầu.",
+    flavor === "enterprise" ? "Với outsource, đây là lợi thế khi client cần mở rộng nhiều nền tảng Apple." : "Với indie, đây là lợi thế khi mở rộng sản phẩm ra nhiều thiết bị.",
+  ].join("\n"), { x: 1.05, y: 3.98, w: 6.75, h: 0.62, fontFace: FONT, fontSize: 13.6, color: C.ink, breakLine: false, fit: "shrink" });
+  addSource(s, "Nguồn ảnh: Wikimedia Commons; nội dung kỹ thuật: Apple Developer platform documentation.");
+  addFooter(s, deckLabel, false);
+  return s;
+}
+
+function appArchitectureVisualSlide(pres, deckLabel, flavor) {
+  const s = pres.addSlide();
+  addBaseBg(s, false);
+  addSlideTitle(s, "Cấu trúc một app iOS hiện đại", "Đọc project theo luồng: UI -> State/Logic -> Data -> Platform.");
+
+  const layers = [
+    ["UI", "SwiftUI / UIKit", "Màn hình, component, navigation", C.primary],
+    ["Logic", "ViewModel / Use case", "State, validation, async/await", C.accent],
+    ["Data", "REST/GraphQL + local DB", "Codable, cache, Core Data/SwiftData", C.primary],
+    ["Platform", "Apple SDK", "Push, Maps, Health, AV, StoreKit", C.accent],
+  ];
+  layers.forEach((l, i) => {
+    const y = 1.55 + i * 1.05;
+    s.addShape("rect", { x: 0.85 + i * 0.18, y, w: 7.0 - i * 0.28, h: 0.72, fill: { color: i % 2 ? "EEF5EA" : C.white }, line: { color: l[3], width: 1 } });
+    s.addText(l[0], { x: 1.1 + i * 0.18, y: y + 0.2, w: 0.9, h: 0.24, fontFace: FONT, fontSize: 14, bold: true, color: l[3] });
+    s.addText(l[1], { x: 2.0 + i * 0.18, y: y + 0.15, w: 2.15, h: 0.24, fontFace: FONT, fontSize: 13, bold: true, color: C.ink });
+    s.addText(l[2], { x: 4.15 + i * 0.18, y: y + 0.15, w: 3.25 - i * 0.18, h: 0.28, fontFace: FONT, fontSize: 11.5, color: C.inkSoft });
+  });
+  s.addShape("rect", { x: 8.55, y: 1.45, w: 3.95, h: 4.55, fill: { color: C.bgDark }, line: { color: C.bgDark, width: 0 } });
+  s.addText("Ví dụ project outsource", { x: 8.88, y: 1.78, w: 3.25, h: 0.28, fontFace: FONT, fontSize: 15, bold: true, color: C.accent });
+  const modules = flavor === "enterprise"
+    ? ["Auth", "Account", "Transfer", "KYC", "Notification", "Analytics"]
+    : ["Onboarding", "Paywall", "Core feature", "Settings", "Analytics", "Support"];
+  modules.forEach((m, i) => {
+    const x = 8.9 + (i % 2) * 1.55;
+    const y = 2.35 + Math.floor(i / 2) * 0.72;
+    addPill(s, m, x, y, 1.35, i % 2 ? C.accent : C.primary, C.bgDark);
+  });
+  s.addText("Câu hỏi hay để hỏi lớp: nếu bug ở màn hình login, em sẽ bắt đầu đọc từ layer nào?", {
+    x: 8.88, y: 5.05, w: 3.25, h: 0.55,
+    fontFace: FONT, fontSize: 13.5, bold: true, color: C.white,
+  });
+  addFooter(s, deckLabel, false);
+  return s;
+}
+
+function languageHistoryVisualSlide(pres, deckLabel, flavor) {
+  const s = pres.addSlide();
+  addBaseBg(s, false);
+  addSlideTitle(s, "Objective-C -> Swift: đừng học như hai thế giới tách rời", "Swift là chính, Objective-C giúp đọc legacy và hiểu nền tảng Apple lâu đời.");
+  s.addImage({ path: asset("swift-logo.png"), x: 9.25, y: 1.12, w: 2.35, h: 0.73 });
+
+  const milestones = [
+    ["1984", "Objective-C", "C + Smalltalk\nmessage syntax"],
+    ["2008", "UIKit", "iPhone SDK\nproduction UI"],
+    ["2014", "Swift", "type-safe\nmodern syntax"],
+    ["2019", "SwiftUI", "declarative\nstate-driven"],
+    ["2024", "Swift 6", "strict concurrency\nsafer async"],
+  ];
+  s.addShape("rect", { x: 0.95, y: 3.25, w: 10.8, h: 0.07, fill: { color: "CBDCC6" }, line: { color: "CBDCC6", width: 0 } });
+  milestones.forEach((m, i) => {
+    const x = 0.95 + i * 2.7;
+    const color = i < 2 ? C.inkSoft : (i % 2 ? C.accent : C.primary);
+    s.addShape("ellipse", { x: x - 0.18, y: 3.07, w: 0.42, h: 0.42, fill: { color }, line: { color, width: 0 } });
+    s.addText(m[0], { x: x - 0.45, y: 2.34, w: 0.9, h: 0.26, fontFace: FONT, fontSize: 14, bold: true, color, align: "center" });
+    s.addText(m[1], { x: x - 0.78, y: 2.66, w: 1.55, h: 0.28, fontFace: FONT, fontSize: 13, bold: true, color: C.ink, align: "center" });
+    s.addText(m[2], { x: x - 0.85, y: 3.65, w: 1.7, h: 0.55, fontFace: FONT, fontSize: 10.5, color: C.inkSoft, align: "center" });
+  });
+  s.addShape("rect", { x: 1.0, y: 5.2, w: 11.55, h: 0.82, fill: { color: C.bgDark }, line: { color: C.bgDark, width: 0 } });
+  s.addText(flavor === "enterprise"
+    ? "Thông điệp phỏng vấn: viết Swift tốt, nhưng phải đọc được Obj-C/bridging khi gặp codebase cũ."
+    : "Thông điệp indie: chọn Swift/SwiftUI để ship nhanh, biết Obj-C như kiến thức nền.",
+    { x: 1.25, y: 5.48, w: 10.95, h: 0.25, fontFace: FONT, fontSize: 16, bold: true, color: C.white });
+  addSource(s, "Logo Swift: Apple Inc via Wikimedia Commons, Apache 2.0. Mốc thời gian: Apple Developer / Swift project history.");
+  addFooter(s, deckLabel, false);
+  return s;
+}
+
+function frameworkComparisonVisualSlide(pres, deckLabel) {
+  const s = pres.addSlide();
+  addBaseBg(s, false);
+  addSlideTitle(s, "UIKit vs SwiftUI: khác nhau ở cách nghĩ, không chỉ cú pháp", "Dùng ví dụ state để giải thích vì sao SwiftUI dễ bắt đầu hơn nhưng UIKit vẫn mạnh.");
+
+  const cols = [
+    ["UIKit", "Imperative", "Controller nói UI phải làm gì", "UIViewController\nviewDidLoad()\nbutton.addTarget(...)\ntableView.reloadData()", C.primary],
+    ["SwiftUI", "Declarative", "State đổi -> View tự render lại", "struct ContentView: View\n@State var items = []\nList(items) { ... }", C.accent],
+  ];
+  cols.forEach((c, i) => {
+    const x = 0.75 + i * 6.25;
+    s.addShape("rect", { x, y: 1.55, w: 5.72, h: 4.75, fill: { color: C.white }, line: { color: c[4], width: 1.2 } });
+    s.addShape("rect", { x, y: 1.55, w: 5.72, h: 0.12, fill: { color: c[4] }, line: { color: c[4], width: 0 } });
+    s.addText(c[0], { x: x + 0.3, y: 1.9, w: 2.1, h: 0.35, fontFace: FONT, fontSize: 21, bold: true, color: C.primaryDk });
+    s.addText(c[1], { x: x + 3.35, y: 1.95, w: 1.9, h: 0.25, fontFace: FONT, fontSize: 12.5, bold: true, color: c[4], align: "right" });
+    s.addText(c[2], { x: x + 0.3, y: 2.45, w: 5.05, h: 0.38, fontFace: FONT, fontSize: 14.5, bold: true, color: C.ink });
+    s.addShape("rect", { x: x + 0.35, y: 3.12, w: 5.0, h: 1.45, fill: { color: "102018" }, line: { color: "102018", width: 0 } });
+    s.addText(c[3], { x: x + 0.58, y: 3.38, w: 4.55, h: 0.9, fontFace: "Courier New", fontSize: 12, color: C.accent });
+    s.addText(i === 0 ? "Production lâu đời, control sâu, nhiều code legacy." : "Nhanh cho màn hình mới, preview tốt, gọn cho junior.",
+      { x: x + 0.32, y: 4.95, w: 5.05, h: 0.5, fontFace: FONT, fontSize: 13.5, color: C.inkSoft });
+  });
+  addFooter(s, deckLabel, false);
+  return s;
+}
+
+function frameworkDecisionSlide(pres, deckLabel, flavor) {
+  const s = pres.addSlide();
+  addBaseBg(s, false);
+  addSlideTitle(s, "Chọn UIKit hay SwiftUI trong thực tế 2026?", "Quyết định theo codebase, target iOS version và mức custom UI.");
+
+  const decisions = [
+    ["Màn mới, target iOS mới", "SwiftUI trước", C.accent],
+    ["Codebase cũ / screen phức tạp", "UIKit vẫn sống khỏe", C.primary],
+    ["Team outsource enterprise", "Hybrid là mặc định", C.primaryDk],
+  ];
+  decisions.forEach((d, i) => {
+    const y = 1.65 + i * 1.15;
+    s.addShape("rect", { x: 0.9, y, w: 4.0, h: 0.76, fill: { color: C.white }, line: { color: d[2], width: 1 } });
+    s.addText(d[0], { x: 1.15, y: y + 0.18, w: 3.35, h: 0.22, fontFace: FONT, fontSize: 12.5, bold: true, color: C.ink });
+    s.addShape("rect", { x: 5.15, y: y + 0.34, w: 0.8, h: 0.05, fill: { color: d[2] }, line: { color: d[2], width: 0 } });
+    s.addShape("rect", { x: 5.82, y: y + 0.25, w: 0.18, h: 0.22, fill: { color: d[2] }, line: { color: d[2], width: 0 } });
+    s.addShape("rect", { x: 6.2, y, w: 3.25, h: 0.76, fill: { color: d[2] }, line: { color: d[2], width: 0 } });
+    s.addText(d[1], { x: 6.42, y: y + 0.2, w: 2.8, h: 0.2, fontFace: FONT, fontSize: 13.5, bold: true, color: C.white, align: "center" });
+  });
+  s.addShape("rect", { x: 9.85, y: 1.6, w: 2.35, h: 3.1, fill: { color: "EEF5EA" }, line: { color: C.accent, width: 1 } });
+  s.addText("Bài học cho intern", { x: 10.1, y: 1.9, w: 1.85, h: 0.24, fontFace: FONT, fontSize: 13, bold: true, color: C.primaryDk, align: "center" });
+  s.addText(flavor === "enterprise" ? "Học cả hai.\nInterview outsource hay hỏi: UIKit lifecycle, Auto Layout, SwiftUI state." : "SwiftUI để ship nhanh.\nUIKit đủ để đọc docs và xử lý edge case.",
+    { x: 10.12, y: 2.55, w: 1.8, h: 1.4, fontFace: FONT, fontSize: 14, bold: true, color: C.ink, align: "center", valign: "middle" });
+  addFooter(s, deckLabel, false);
+  return s;
+}
+
+function toolchainVisualSlide(pres, deckLabel, flavor) {
+  const s = pres.addSlide();
+  addBaseBg(s, false);
+  addSlideTitle(s, "Bộ công cụ tối thiểu: Xcode là trung tâm", "Cho sinh viên nhìn toolchain như một pipeline thay vì danh sách tên.");
+  addPhotoPanel(s, asset("xcode-screenshot.png"), 0.75, 1.45, 6.1, 3.7, "Screenshot Xcode: HtetPyae / Wikimedia Commons CC BY-SA 4.0");
+
+  const tools = [
+    ["Xcode", "Code + build + simulator"],
+    ["SPM", "Quản lý package"],
+    ["Instruments", "Memory / CPU / energy"],
+    ["TestFlight", "Beta trước release"],
+    [flavor === "indie" ? "RevenueCat" : "Xcode Cloud", flavor === "indie" ? "IAP/subscription" : "CI/CD chính chủ"],
+  ];
+  tools.forEach((t, i) => {
+    const x = 7.35 + (i % 2) * 2.5;
+    const y = 1.55 + Math.floor(i / 2) * 1.23;
+    s.addShape("rect", { x, y, w: 2.15, h: 0.82, fill: { color: i % 2 ? "EEF5EA" : C.white }, line: { color: i % 2 ? C.accent : C.primary, width: 1 } });
+    s.addText(t[0], { x: x + 0.18, y: y + 0.16, w: 1.75, h: 0.22, fontFace: FONT, fontSize: 13.5, bold: true, color: C.primaryDk });
+    s.addText(t[1], { x: x + 0.18, y: y + 0.45, w: 1.78, h: 0.18, fontFace: FONT, fontSize: 9.4, color: C.inkSoft });
+  });
+  s.addShape("rect", { x: 1.0, y: 5.55, w: 11.4, h: 0.62, fill: { color: C.bgDark }, line: { color: C.bgDark, width: 0 } });
+  s.addText("Cách giải thích: dev iOS không chỉ viết Swift; còn phải build, test, đo performance và phát hành qua App Store ecosystem.", {
+    x: 1.28, y: 5.78, w: 10.9, h: 0.18, fontFace: FONT, fontSize: 13.8, bold: true, color: C.white,
+  });
+  addFooter(s, deckLabel, false);
+  return s;
+}
+
+function tourCodeVisualSlide(pres, deckLabel) {
+  const s = pres.addSlide();
+  addBaseBg(s, false);
+  addSlideTitle(s, "Tour code mẫu: đọc project như đọc bản đồ", "Không cần gõ live; chỉ cần chỉ đúng vai trò từng thư mục.");
+  const rows = [
+    ["App/", "entry point, DI, app lifecycle"],
+    ["Features/", "mỗi màn hình / flow là một module"],
+    ["Core/", "networking, persistence, design system"],
+    ["Resources/", "asset catalog, localizable strings"],
+    ["Tests/", "unit test, UI test, fixtures"],
+  ];
+  rows.forEach((r, i) => {
+    const y = 1.55 + i * 0.72;
+    s.addText(r[0], { x: 0.85, y, w: 2.0, h: 0.28, fontFace: "Courier New", fontSize: 16, bold: true, color: i % 2 ? C.accent : C.primary });
+    s.addShape("rect", { x: 2.95, y: y + 0.12, w: 0.85, h: 0.04, fill: { color: "CBDCC6" }, line: { color: "CBDCC6", width: 0 } });
+    s.addText(r[1], { x: 4.0, y: y + 0.02, w: 3.8, h: 0.22, fontFace: FONT, fontSize: 13.2, color: C.ink });
+  });
+  s.addShape("rect", { x: 8.25, y: 1.45, w: 4.1, h: 3.95, fill: { color: "102018" }, line: { color: C.accent, width: 1 } });
+  s.addText("struct ChecklistView: View {\n  @State var items: [Item]\n\n  var body: some View {\n    List(items) { item in\n      Row(item)\n    }\n    .task { await viewModel.load() }\n  }\n}", {
+    x: 8.55, y: 1.85, w: 3.55, h: 2.65,
+    fontFace: "Courier New", fontSize: 12.2, color: C.accent,
+  });
+  s.addText("Điểm nhấn demo: View -> ViewModel -> Service -> State", {
+    x: 8.55, y: 4.85, w: 3.55, h: 0.25,
+    fontFace: FONT, fontSize: 12.5, bold: true, color: C.white,
+  });
+  addFooter(s, deckLabel, false);
+  return s;
+}
+
+function outsourceDefinitionVisualSlide(pres, deckLabel) {
+  const s = pres.addSlide();
+  addBaseBg(s, false);
+  addSlideTitle(s, "Outsource là gì?", "Hãy giải thích bằng luồng trách nhiệm, không chỉ bằng định nghĩa.");
+  const nodes = [
+    ["Client\nUS / JP / EU", 0.9, 2.1, C.primary],
+    ["Team VN\nPM · Dev · QA", 4.55, 2.1, C.accent],
+    ["App / Feature\nTestFlight -> Store", 8.2, 2.1, C.primary],
+  ];
+  nodes.forEach((n) => {
+    s.addShape("rect", { x: n[1], y: n[2], w: 2.45, h: 1.3, fill: { color: C.white }, line: { color: n[3], width: 1.2 } });
+    s.addText(n[0], { x: n[1] + 0.18, y: n[2] + 0.38, w: 2.05, h: 0.42, fontFace: FONT, fontSize: 16, bold: true, color: C.primaryDk, align: "center" });
+  });
+  [3.45, 7.1].forEach((x) => {
+    s.addShape("rect", { x, y: 2.72, w: 0.8, h: 0.05, fill: { color: C.primary }, line: { color: C.primary, width: 0 } });
+    s.addShape("rect", { x: x + 0.66, y: 2.62, w: 0.2, h: 0.24, fill: { color: C.primary }, line: { color: C.primary, width: 0 } });
+  });
+  s.addText("Client trả tiền cho năng lực delivery: hiểu requirement, estimate, code, test, release, maintain.", {
+    x: 1.15, y: 4.45, w: 10.75, h: 0.35, fontFace: FONT, fontSize: 18, bold: true, color: C.ink, align: "center",
+  });
+  s.addText("Không sở hữu sản phẩm cuối, nhưng học được quy trình enterprise và làm việc với khách quốc tế.", {
+    x: 1.45, y: 5.0, w: 10.15, h: 0.28, fontFace: FONT, fontSize: 14.5, color: C.inkSoft, align: "center",
+  });
+  addFooter(s, deckLabel, false);
+  return s;
+}
+
+function daNangMarketVisualSlide(pres, deckLabel) {
+  const s = pres.addSlide();
+  addBaseBg(s, false);
+  addSlideTitle(s, "Đà Nẵng: outsource Mobile có đất diễn nếu bạn có iOS thật", "Dùng bức tranh địa phương để sinh viên thấy cơ hội gần mình.");
+  addPhotoPanel(s, asset("dragon-bridge.jpg"), 7.35, 1.35, 5.05, 4.75, "Cầu Rồng Đà Nẵng: Tran Anh Khoa / Wikimedia Commons CC BY-SA 2.0");
+  const points = [
+    ["Top 3", "trung tâm CNTT lớn của Việt Nam", C.primary],
+    ["JP · US · EU", "thị trường outsource phổ biến", C.accent],
+    ["iOS", "cung nhân lực mỏng hơn Android", C.primary],
+  ];
+  points.forEach((p, i) => {
+    const y = 1.55 + i * 1.22;
+    s.addShape("rect", { x: 0.8, y, w: 5.9, h: 0.86, fill: { color: C.white }, line: { color: p[2], width: 1 } });
+    s.addText(p[0], { x: 1.1, y: y + 0.2, w: 1.45, h: 0.28, fontFace: FONT, fontSize: 20, bold: true, color: p[2], align: "center" });
+    s.addText(p[1], { x: 2.8, y: y + 0.23, w: 3.35, h: 0.22, fontFace: FONT, fontSize: 13.5, bold: true, color: C.ink });
+  });
+  addMetricBar(s, "Nhu cầu tuyển Android", 10, 10, 0.95, 5.12, 2.3, C.primary, "10");
+  addMetricBar(s, "Nhu cầu tuyển iOS", 7, 10, 0.95, 5.55, 2.3, C.accent, "7");
+  addSource(s, "Số liệu nhu cầu: quy đổi từ TopDev Vietnam IT & Tech Talent Landscape 2024-2025, tr.34. Ảnh: Wikimedia Commons.");
+  addFooter(s, deckLabel, false);
+  return s;
+}
+
+function dayInLifeVisualSlide(pres, deckLabel) {
+  const s = pres.addSlide();
+  addBaseBg(s, false);
+  addSlideTitle(s, "Một ngày của iOS dev outsource", "Sinh viên cần hình dung công việc lặp lại theo nhịp sprint và client timezone.");
+  const items = [
+    ["08:30", "Pull code\nJira\nDaily", C.primary],
+    ["10:00", "Code feature\nUnit test", C.accent],
+    ["14:00", "PR review\nQA bug", C.primary],
+    ["16:30", "Demo\nRetro / planning", C.accent],
+    ["21:00?", "Sync US\nkhi cần", C.primaryDk],
+  ];
+  s.addShape("rect", { x: 1.0, y: 3.1, w: 10.9, h: 0.08, fill: { color: "CBDCC6" }, line: { color: "CBDCC6", width: 0 } });
+  items.forEach((it, i) => {
+    const x = 1.0 + i * 2.72;
+    s.addShape("ellipse", { x: x - 0.25, y: 2.85, w: 0.58, h: 0.58, fill: { color: it[2] }, line: { color: it[2], width: 0 } });
+    s.addText(it[0], { x: x - 0.42, y: 2.1, w: 0.92, h: 0.25, fontFace: FONT, fontSize: 14, bold: true, color: it[2], align: "center" });
+    s.addShape("rect", { x: x - 0.75, y: 3.75, w: 1.55, h: 1.05, fill: { color: C.white }, line: { color: it[2], width: 1 } });
+    s.addText(it[1], { x: x - 0.58, y: 4.05, w: 1.2, h: 0.35, fontFace: FONT, fontSize: 11.5, bold: true, color: C.ink, align: "center" });
+  });
+  s.addShape("rect", { x: 1.25, y: 5.55, w: 10.6, h: 0.58, fill: { color: C.bgDark }, line: { color: C.bgDark, width: 0 } });
+  s.addText("Kỹ năng mềm thật sự: đọc ticket rõ, hỏi sớm, update tiến độ và giao tiếp bằng tiếng Anh.", {
+    x: 1.55, y: 5.78, w: 10.0, h: 0.16, fontFace: FONT, fontSize: 13.8, bold: true, color: C.white, align: "center",
+  });
+  addFooter(s, deckLabel, false);
+  return s;
+}
+
+function outsourceProcessVisualSlide(pres, deckLabel) {
+  const s = pres.addSlide();
+  addBaseBg(s, false);
+  addSlideTitle(s, "Quy trình một dự án outsource", "Flow này giúp sinh viên thấy ticket không tự nhiên xuất hiện trong Jira.");
+  const steps = [
+    ["1", "Pre-sales", "proposal\nestimate"],
+    ["2", "Kick-off", "scope\nteam size"],
+    ["3", "Sprint", "plan -> code\nreview -> retro"],
+    ["4", "UAT", "client test\nlog bug"],
+    ["5", "Release", "TestFlight\nApp Store"],
+    ["6", "Maintain", "fix bug\niOS update"],
+  ];
+  steps.forEach((st, i) => {
+    const x = 0.65 + i * 2.05;
+    s.addShape("rect", { x, y: 2.05, w: 1.55, h: 1.35, fill: { color: i % 2 ? "EEF5EA" : C.white }, line: { color: i % 2 ? C.accent : C.primary, width: 1 } });
+    s.addText(st[0], { x: x + 0.15, y: 2.22, w: 0.3, h: 0.22, fontFace: FONT, fontSize: 12, bold: true, color: i % 2 ? C.accent : C.primary });
+    s.addText(st[1], { x: x + 0.28, y: 2.52, w: 1.0, h: 0.2, fontFace: FONT, fontSize: 12.5, bold: true, color: C.primaryDk, align: "center" });
+    s.addText(st[2], { x: x + 0.22, y: 2.91, w: 1.1, h: 0.32, fontFace: FONT, fontSize: 9.8, color: C.inkSoft, align: "center" });
+    if (i < steps.length - 1) {
+      s.addShape("rect", { x: x + 1.62, y: 2.7, w: 0.35, h: 0.05, fill: { color: C.primary }, line: { color: C.primary, width: 0 } });
+      s.addShape("rect", { x: x + 1.9, y: 2.61, w: 0.12, h: 0.22, fill: { color: C.primary }, line: { color: C.primary, width: 0 } });
+    }
+  });
+  s.addShape("rect", { x: 1.05, y: 4.85, w: 11.15, h: 0.85, fill: { color: C.bgDark }, line: { color: C.bgDark, width: 0 } });
+  s.addText("Điểm cần nhấn mạnh: intern/fresher thường vào ở Sprint/bugfix, nhưng phải hiểu cả chuỗi để làm việc có trách nhiệm.", {
+    x: 1.35, y: 5.16, w: 10.55, h: 0.22, fontFace: FONT, fontSize: 14, bold: true, color: C.white, align: "center",
+  });
+  addFooter(s, deckLabel, false);
+  return s;
+}
+
+function careerSkillsVisualSlide(pres, deckLabel) {
+  const s = pres.addSlide();
+  addBaseBg(s, false);
+  addSlideTitle(s, "Kỹ năng cần để xin intern/fresher iOS", "Gom kỹ năng thành bản đồ ưu tiên để sinh viên tự học không bị loạn.");
+  const rings = [
+    ["Swift + UI", "build được màn đơn giản", 1.15, 1.85, C.primary],
+    ["REST + JSON", "gọi API, parse, error state", 4.55, 1.85, C.accent],
+    ["Git + Jira", "branch, PR, conflict, sprint", 7.95, 1.85, C.primary],
+    ["English docs", "đọc Apple docs mỗi ngày", 2.85, 4.25, C.accent],
+    ["Self-learning", "WWDC đổi liên tục", 6.25, 4.25, C.primaryDk],
+  ];
+  rings.forEach((r) => {
+    s.addShape("ellipse", { x: r[2], y: r[3], w: 2.55, h: 1.22, fill: { color: C.white }, line: { color: r[4], width: 1.2 } });
+    s.addText(r[0], { x: r[2] + 0.25, y: r[3] + 0.34, w: 2.05, h: 0.22, fontFace: FONT, fontSize: 13, bold: true, color: r[4], align: "center" });
+    s.addText(r[1], { x: r[2] + 0.25, y: r[3] + 0.68, w: 2.05, h: 0.18, fontFace: FONT, fontSize: 8.8, color: C.inkSoft, align: "center" });
+  });
+  s.addText("Bài tập về nhà: đưa 1 app nhỏ lên GitHub, có README, ảnh màn hình, API/mock data và ít nhất 5 commit rõ nghĩa.", {
+    x: 1.0, y: 6.0, w: 11.3, h: 0.3, fontFace: FONT, fontSize: 15, bold: true, color: C.ink, align: "center",
+  });
+  addFooter(s, deckLabel, false);
+  return s;
+}
+
 // ===================================================
 // SHARED — Phần kỹ thuật (dùng cho cả 2 ca, đổi sắc thái)
 // ===================================================
@@ -220,102 +713,28 @@ function addCommonTechnical(pres, deckLabel, flavor /* 'enterprise' | 'indie' */
   sectionDivider(pres, "PHẦN 1 — KỸ THUẬT", "Lập trình iOS\nhôm nay trông như thế nào?", deckLabel);
 
   // Tổng quan
-  contentSlide(pres, "Hệ sinh thái Apple Platforms", [
-    "iOS · iPadOS · macOS · watchOS · tvOS · visionOS — cùng SDK, cùng Swift, cùng Xcode",
-    "Kỹ năng iOS chuyển dịch được sang các nền tảng khác của Apple",
-    "Phân phối duy nhất qua App Store (trừ sideload tại EU từ 2024)",
-    flavor === 'enterprise'
-      ? "Doanh nghiệp ưu tiên iOS: user chi cao, ít fragmentation, UX chuẩn cao"
-      : "Indie ưu tiên iOS: cộng đồng sẵn sàng trả tiền, App Store sân chơi phẳng toàn cầu",
-  ], deckLabel);
+  platformEcosystemSlide(pres, deckLabel, flavor);
 
-  contentSlide(pres, "Cấu trúc một app iOS hiện đại", [
-    "UI: SwiftUI (mới) hoặc UIKit (truyền thống)",
-    "Logic: Swift thuần · Combine · Swift Concurrency (async/await)",
-    "Data: Core Data · SwiftData (iOS 17+) · Realm · REST/GraphQL",
-    "Platform: APNs · HealthKit · MapKit · AVFoundation · StoreKit",
-    flavor === 'enterprise'
-      ? "Ví dụ minh hoạ: app banking, super-app — kiến trúc nhiều module"
-      : "Ví dụ minh hoạ: Things 3, Bear, Procreate — kiến trúc gọn, 1–3 người maintain",
-  ], deckLabel);
+  appArchitectureVisualSlide(pres, deckLabel, flavor);
 
   // Lịch sử
   sectionDivider(pres, "LỊCH SỬ NGÔN NGỮ", "Từ Objective-C\nđến Swift", deckLabel);
 
-  twoColSlide(pres, "Objective-C vs Swift",
-    "Objective-C (1984–nay)",
-    [
-      "Brad Cox · Tom Love → NeXT → Apple (1996)",
-      "Cú pháp [object method:arg], kế thừa C + Smalltalk",
-      "Toàn bộ API gốc macOS/iOS viết bằng Obj-C",
-      "Yếu: không type-safe mạnh, không optionals, dễ crash do nil messaging",
-      "Còn cần khi maintain code legacy & bridge C/C++",
-    ],
-    "Swift (2014–nay)",
-    [
-      "WWDC 2014 · Chris Lattner (cha đẻ LLVM)",
-      "An toàn · hiện đại · nhanh · thân thiện cho người mới",
-      "Mã nguồn mở từ 2015 → server-side với Vapor",
-      "Cột mốc: Swift 3 (2016), Swift 5 ABI (2019), async/await (Swift 5.5, 2021), Swift 6 strict concurrency (2024)",
-      flavor === 'enterprise' ? "Khuyến nghị: học Swift là chính, biết đọc Obj-C để không 'mù'" : "Indie 2026: Swift + SwiftUI là mặc định, Obj-C chỉ là kiến thức bonus",
-    ],
-    deckLabel
-  );
+  languageHistoryVisualSlide(pres, deckLabel, flavor);
 
   // UIKit vs SwiftUI
   sectionDivider(pres, "FRAMEWORK", "UIKit vs SwiftUI\nhai paradigm, một hệ sinh thái", deckLabel);
 
-  twoColSlide(pres, "UIKit vs SwiftUI",
-    "UIKit (2008–nay) — Imperative",
-    [
-      "Framework gốc của iPhone OS 2",
-      "MVC truyền thống · UIView/UIViewController",
-      "Layout: frame · Auto Layout · Storyboard",
-      "Ổn định, control sâu, mọi tutorial cũ đều dùng",
-      "Nhược: code dài, 'massive view controller', khó test",
-    ],
-    "SwiftUI (2019–nay) — Declarative",
-    [
-      "Cảm hứng từ React và Flutter",
-      "View là struct · state-driven · auto re-render",
-      "Tận dụng @State · @Binding · @Observable",
-      "Nhanh hơn 2–3× cho UI thường gặp",
-      "Nhược: thiếu một số custom sâu, phụ thuộc iOS version",
-    ],
-    deckLabel
-  );
+  frameworkComparisonVisualSlide(pres, deckLabel);
 
-  contentSlide(pres, "Chọn UIKit hay SwiftUI trong thực tế 2026?", [
-    flavor === 'enterprise'
-      ? "Dự án enterprise mới: ưu tiên SwiftUI cho màn hình mới"
-      : "App indie mới: gần như luôn SwiftUI — tốc độ ship là vũ khí",
-    "Codebase lớn cũ: vẫn UIKit, thêm SwiftUI cho màn mới (hybrid)",
-    "Hai framework nhúng vào nhau: UIViewRepresentable · UIHostingController",
-    "Animation phức tạp, custom drawing → UIKit còn lợi thế",
-    flavor === 'enterprise' ? { text: "Bài học cho intern: học CẢ HAI — phỏng vấn outsource hay hỏi", bold: true } : { text: "Bài học cho indie: chọn SwiftUI để 1 người làm được nhanh hơn", bold: true },
-  ], deckLabel);
+  frameworkDecisionSlide(pres, deckLabel, flavor);
 
   // Công cụ
   sectionDivider(pres, "CÔNG CỤ", "Xcode, SPM,\nInstruments & tour code", deckLabel);
 
-  contentSlide(pres, "Bộ công cụ tối thiểu", [
-    "Xcode — IDE chính thức, miễn phí, macOS only",
-    "Swift Package Manager (SPM) — thay CocoaPods, tích hợp thẳng Xcode",
-    "Instruments — đo memory leak · CPU · năng lượng · network",
-    "TestFlight — phân phối beta trước khi lên App Store",
-    "Fastlane — automation đóng gói, upload, screenshot",
-    "SwiftLint · SwiftFormat — giữ code style trong team",
-    flavor === 'indie' ? "RevenueCat — gắn IAP/Subscription nhanh (đặc thù indie)" : "Xcode Cloud — CI/CD chính chủ của Apple từ 2022",
-  ], deckLabel, { bulletSize: 20 });
+  toolchainVisualSlide(pres, deckLabel, flavor);
 
-  contentSlide(pres, "Tour code mẫu (live)", [
-    "Diễn giả mở Xcode — đi tour project đã chuẩn bị sẵn",
-    "Cấu trúc thư mục · Info.plist · Capabilities",
-    "Asset Catalog (icon · color · image set)",
-    "1 View SwiftUI + 1 ViewModel + 1 Service",
-    "Build & chạy trên Simulator → Instruments xem memory",
-    { text: "Không gõ code live — chỉ tour cấu trúc", bold: true, dim: true },
-  ], deckLabel);
+  tourCodeVisualSlide(pres, deckLabel);
 }
 
 // ===================================================
@@ -333,6 +752,9 @@ function buildCa1() {
     "Góc nhìn OUTSOURCE",
     "Kỹ thuật · công cụ · thực trạng outsource Mobile tại Đà Nẵng",
     LBL);
+
+  mobileTalentComparisonSlide(pres, LBL,
+    "Cơ hội cho intern/fresher: iOS không ít nhu cầu; điểm nghẽn là quá ít sinh viên chọn học và có app iOS thật.");
 
   // About me
   contentSlide(pres, "Về diễn giả", [
@@ -369,12 +791,7 @@ function buildCa1() {
   // ====== PHẦN 2 — OUTSOURCE ======
   sectionDivider(pres, "PHẦN 2 — OUTSOURCE", "Đi làm thuê,\nlàm cho khách quốc tế", LBL);
 
-  contentSlide(pres, "Outsource là gì?", [
-    "Khách hàng (Mỹ · Nhật · EU · Singapore) thuê đội ngũ VN làm phần mềm theo yêu cầu",
-    "Mô hình: ODC · Project-based · Staff augmentation",
-    "Không sở hữu sản phẩm cuối, không chia user revenue",
-    "Đổi lại: dòng tiền ổn định, học codebase enterprise",
-  ], LBL);
+  outsourceDefinitionVisualSlide(pres, LBL);
 
   twoColSlide(pres, "Outsource ≠ Product",
     "OUTSOURCE",
@@ -395,31 +812,11 @@ function buildCa1() {
     ],
     LBL);
 
-  contentSlide(pres, "Đà Nẵng — bức tranh outsource Mobile", [
-    "1 trong 3 trung tâm CNTT lớn nhất VN (cùng HN, HCM)",
-    "Cụm doanh nghiệp tập trung quanh Khu CNTT tập trung & Khu CNC",
-    "Đa phần phục vụ thị trường Nhật · Mỹ · EU",
-    "Mobile (iOS+Android) chiếm tỷ trọng đáng kể sau Web/Backend",
-    "iOS: số lượng ít hơn Android nhưng đơn giá CAO HƠN (cung không đủ cầu)",
-    { text: "Số liệu tổng hợp từ nguồn công khai (VINASA · TopDev · ITviec · báo chí)", dim: true, size: 16 },
-  ], LBL);
+  daNangMarketVisualSlide(pres, LBL);
 
-  contentSlide(pres, "Một ngày của iOS dev outsource", [
-    "Sáng — pull code, đọc Jira, daily standup với client (EN/JP)",
-    "Trưa — code feature theo ticket · viết unit test · review PR",
-    "Chiều — meeting BA/QA · fix bug · pair-programming",
-    "Tối — đôi khi sync meeting 21–22h nếu client US",
-    { text: "Tiếng Anh là điều kiện cần — tiếng Nhật là điểm cộng lớn", bold: true },
-  ], LBL);
+  dayInLifeVisualSlide(pres, LBL);
 
-  contentSlide(pres, "Quy trình một dự án outsource", [
-    "Pre-sales · proposal · estimate effort",
-    "Kick-off · scope · team size · sprint 2 tuần",
-    "Development · planning → daily → review → retro",
-    "UAT — client test, log bug",
-    "Release · TestFlight → App Store · bàn giao tài liệu",
-    "Maintenance · vá lỗi · cập nhật theo iOS version mới mỗi năm",
-  ], LBL);
+  outsourceProcessVisualSlide(pres, LBL);
 
   twoColSlide(pres, "Vai trò trong team",
     "Hierarchy",
@@ -438,17 +835,7 @@ function buildCa1() {
     ],
     LBL);
 
-  contentSlide(pres, "Kỹ năng cần để xin intern/fresher iOS", [
-    { text: "Cứng cơ bản", bold: true },
-    "Swift cơ bản · UIKit hoặc SwiftUI build được màn đơn giản · Auto Layout · MVC/MVVM",
-    { text: "Cứng nâng cao", bold: true },
-    "REST API · JSON Codable · UserDefaults/CoreData · async/await",
-    { text: "Mềm", bold: true },
-    "Tiếng Anh đọc tài liệu Apple (bắt buộc) · giao tiếp cơ bản · tiếng Nhật = bonus",
-    { text: "Quy trình", bold: true },
-    "Git (branch, PR, conflict) · Jira · hiểu sprint là gì",
-    { text: "Tự học là kỹ năng số 1 — iOS đổi mỗi năm tại WWDC", bold: true, size: 22 },
-  ], LBL, { bulletSize: 18 });
+  careerSkillsVisualSlide(pres, LBL);
 
   twoColSlide(pres, "Outsource — Ưu & Nhược",
     "Ưu điểm",
@@ -513,6 +900,9 @@ function buildCa2() {
     "Góc nhìn PRODUCT & INDIE",
     "Kỹ thuật · công cụ · câu chuyện Flappy Bird & con đường indie",
     LBL);
+
+  mobileTalentComparisonSlide(pres, LBL,
+    "Cơ hội cho product/indie: chọn iOS giúp bạn nổi bật nhanh hơn, vì nguồn người học mỏng hơn nhiều so với Android.");
 
   // About me
   contentSlide(pres, "Về diễn giả", [
